@@ -158,13 +158,21 @@ class Post(object):
         try:
             import lxml.html
         except ImportError:
-            print("\nlxml is required in order to create post excerpts.")
-            print("See http://lxml.de/installation.html for installation "
+            try:
+                import bs4
+            except ImportError:
+                print("\nlxml or bs4 is required in order to create post excerpts.")
+                print("See http://lxml.de/installation.html for installation "
                   "instructions.")
             print("You can also turn off post excerpts in your _config.py:")
             print("\n    plugins.blog.post_excerpts = False\n")
             sys.exit(1)
-        post_text = lxml.html.fromstring(self.content).text_content()
+
+        if lxml.html:
+            post_text = lxml.html.fromstring(self.content).text_content()
+        elif bs4:
+            soup = bs4.BeautifulSoup(self.content)
+            post_text = soup.text
         post_words = post_text.split(None, num_words)
         return " ".join(post_words[:num_words])
 
