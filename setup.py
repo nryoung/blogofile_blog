@@ -31,6 +31,11 @@ dependencies = [
 if PY26:
     dependencies.append('argparse')
 
+try:
+    import lxml
+except ImportError:
+    dependencies.append('beautifulsoup4')
+
 
 def find_package_data(module, path):
     """Find all data files to include in the package.
